@@ -1,0 +1,8 @@
+sentence-transformers
+pandas
+numpy
+scikit-learn
+mltb==0.7.dev3
+datasets
+black
+flake8
