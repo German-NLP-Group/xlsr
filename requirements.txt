@@ -6,3 +6,4 @@ mltb==0.7.dev3
 datasets
 black
 flake8
+jupyter
