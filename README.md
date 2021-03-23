@@ -24,3 +24,11 @@ My using the contradiction samples from XNLI we also get negative values. Our hy
 ## Hyperparameter Search
 - we do a 10 fold cross validation over concatenation of stsb-train and stsb-dev
 - during cross validaton we concatate all XNLI data (dev and test) to the train data of each fold
+
+## Variations of the Experiment
+Things that can be tested:
+- reduce label for entailment to something `< 1.0`
+- only use contradiction from XNLI and not entailment and neutral
+- test with one language (de or en) and a mix of both
+- test with 3 languages
+- test with other base models from here https://github.com/UKPLab/sentence-transformers/blob/master/docs/pretrained_models.md#multi-lingual-models
