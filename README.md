@@ -1,6 +1,9 @@
 # XLSR - Cross-Lingual Sentence Representations
 Cross-Lingual Sentence Representations
 
+This is ongoing research. If you have ideas or want to drop a comment just
+[open up an issue](https://github.com/German-NLP-Group/xlsr/issues/new) here on GitHub.
+
 ## Data
 - stsb from [STSb Multi MT](https://github.com/PhilipMay/stsb-multi-mt)
   - 5749 test samples per language
