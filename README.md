@@ -19,7 +19,7 @@ This is ongoing research. If you have ideas or want to drop a comment just
   - entailment to 1.0
   - neutral to 0.0
 
-My using the contradiction samples form XNLI we also get negative values. Our hypothesis is that this benefits the model.
+My using the contradiction samples from XNLI we also get negative values. Our hypothesis is that this benefits the model.
 
 ## Hyperparameter Search
 - we do a 10 fold cross validation over concatenation of stsb-train and stsb-dev
