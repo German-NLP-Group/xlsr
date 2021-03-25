@@ -1,6 +1,8 @@
 # XLSR - Cross-Lingual Sentence Representations
 Cross-Lingual Sentence Representations
 
+The goal of this project is to provide models that further increase the performance of [T-Systems-onsite/cross-en-de-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-de-roberta-sentence-transformer).
+
 This is ongoing research. If you have ideas or want to drop a comment just
 [open up an issue](https://github.com/German-NLP-Group/xlsr/issues/new) here on GitHub.
 
