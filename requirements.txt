@@ -8,3 +8,4 @@ black
 flake8
 jupyter
 rope
+pytest
