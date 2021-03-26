@@ -130,4 +130,5 @@ dmypy.json
 
 # own
 data/
-.vscode/settings.json
+.vscode/
+legacy/
