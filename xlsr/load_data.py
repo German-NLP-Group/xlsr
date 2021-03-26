@@ -1,4 +1,3 @@
-
 import os
 import csv
 
@@ -72,9 +71,9 @@ def load_xnli_data(language, label_map):
     df = pd.read_csv(
         os.path.join(BASE_DATA_PATH, BASE_XNLI_FILENAME.format(language)),
         low_memory=False,
-        )
+    )
     df.drop("language", axis=1, inplace=True)
-    result = df.to_dict('records')
+    result = df.to_dict("records")
     for r in result:
         assert r["gold_label"] in label_map
         r["similarity_score"] = label_map[r["gold_label"]]
