@@ -83,6 +83,11 @@ def to_input_example(language_list):
 
 
 def fit_model(trial, train_fold, val_fold, fold_index):
+    print("######################")
+    print("start of fold_index:", fold_index)
+    print("len(train_fold)", len(train_fold))
+    print("len(val_fold)", len(val_fold))
+
     batch_size = trial.suggest_int("batch_size", 4, 50)
     num_epochs = trial.suggest_int("num_epochs", 1, 3)
     lr = trial.suggest_uniform("lr", 2e-6, 2e-4)
