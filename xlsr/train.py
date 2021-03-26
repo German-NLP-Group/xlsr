@@ -3,6 +3,7 @@ import random
 import math
 import numpy as np
 from sklearn.model_selection import KFold
+import optuna
 from torch.utils.data import DataLoader
 from sentence_transformers import (
     InputExample,
@@ -18,7 +19,9 @@ from sentence_transformers.evaluation import (
 from load_data import load_stsb_train_dev_data, load_xnli_data
 
 
+study_name = "stsb_xnli_de_en_cross_01"
 model_name = "xlm-r-distilroberta-base-paraphrase-v1"
+max_folds = 4
 
 
 def load_all_stsb_data(languages):
@@ -79,8 +82,8 @@ def to_input_example(language_list):
     return result
 
 
-def fit_model(trial, train_fold, val_fold):
-    batch_size = trial.suggest_int("batch_size", 4, 256)
+def fit_model(trial, train_fold, val_fold, fold_index):
+    batch_size = trial.suggest_int("batch_size", 4, 50)
     num_epochs = trial.suggest_int("num_epochs", 1, 3)
     lr = trial.suggest_uniform("lr", 2e-6, 2e-4)
     eps = trial.suggest_uniform("eps", 1e-7, 1e-5)
@@ -113,14 +116,18 @@ def fit_model(trial, train_fold, val_fold):
         weight_decay=weight_decay,
     )
 
-    result = 0.0
-    test_evaluator = EmbeddingSimilarityEvaluator.from_input_examples(
-        val_fold, name="sts-dev", main_similarity=SimilarityFunction.COSINE
+    # evaluate the model
+    val_evaluator = EmbeddingSimilarityEvaluator.from_input_examples(
+        val_fold, name="val_set", main_similarity=SimilarityFunction.COSINE
     )
-    result = test_evaluator(model)
+    result = val_evaluator(model)
+
     print("######################################################")
     print("test result:", result)
     print("######################################################")
+
+    if math.isnan(result):
+        result = 0.0
 
     return result
 
@@ -152,8 +159,10 @@ def train(trial):
 
     xval_indexes = np.arange(len(all_data_stsb_cross_data[0]))
 
+    results = []
+
     kf = KFold(n_splits=10, shuffle=True, random_state=42)
-    for train_indexes, val_indexes in kf.split(xval_indexes):
+    for fold_index, (train_indexes, val_indexes) in enumerate(kf.split(xval_indexes)):
         train_fold = []
         val_fold = []
 
@@ -177,38 +186,33 @@ def train(trial):
         train_fold = to_input_example(train_fold)
         val_fold = to_input_example(val_fold)
 
-        fit_model(trial, train_fold, val_fold)
+        # fit the model
+        result = fit_model(trial, train_fold, val_fold, fold_index)
+
+        results.append(result)
+        trial.set_user_attr("results", str(results))
+        mean_result = np.mean(results)
+
+        if (mean_result < 0.1) or (fold_index >= max_folds - 1):
+            return mean_result
+
+
+def ex_wrapper(trial):
+    try:
+        train(trial)
+    except Exception as e:
+        print(e)
+        trial.set_user_attr("exception", str(e))
+        return float("nan")
 
 
 if __name__ == "__main__":
-    label_map = {
-        "contradiction": -1.0,
-        "entailment": 1.0,
-        "neutral": 0.0,
-    }
+    study = optuna.create_study(
+        sampler=optuna.samplers.TPESampler(multivariate=True),
+        study_name=study_name,
+        storage="sqlite:///optuna.db",
+        load_if_exists=True,
+        direction="maximize",
+    )
 
-    all_stsb_data = load_all_stsb_data(["en", "de"])
-    print("### first example from stsb")
-    print(all_stsb_data[0][0])
-    print(all_stsb_data[1][0])
-
-    all_xnli_data = load_all_xnli_data(["en", "de"], label_map)
-    print("### last example from xnli")
-    print(all_xnli_data[0][-1])
-    print(all_xnli_data[1][-1])
-
-    all_data_stsb_cross_data = add_cross_data(all_stsb_data, [[0, 1], [1, 0]])
-    print("### first example from stsb with crossing")
-    print(all_data_stsb_cross_data[0][0])
-    print(all_data_stsb_cross_data[1][0])
-    print(all_data_stsb_cross_data[2][0])
-    print(all_data_stsb_cross_data[3][0])
-
-    all_data_xnli_cross_data = add_cross_data(all_xnli_data, [[0, 1], [1, 0]])
-    print("### last example from xnli with crossing")
-    print(all_data_xnli_cross_data[0][-1])
-    print(all_data_xnli_cross_data[1][-1])
-    print(all_data_xnli_cross_data[2][-1])
-    print(all_data_xnli_cross_data[3][-1])
-
-    #train()
+    study.optimize(ex_wrapper)
