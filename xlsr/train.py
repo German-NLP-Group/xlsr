@@ -204,7 +204,7 @@ def train(trial):
 
 def ex_wrapper(trial):
     try:
-        train(trial)
+        return train(trial)
     except Exception as e:
         print(e)
         trial.set_user_attr("exception", str(e))
