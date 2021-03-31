@@ -219,7 +219,7 @@ if __name__ == "__main__":
         direction="maximize",
         pruner=SignificanceRepeatedTrainingPruner(
             alpha=0.4,
-            n_warmup_steps=4,
+            n_warmup_steps=max_folds,
         ),
     )
 
