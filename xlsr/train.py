@@ -1,3 +1,8 @@
+"""
+This is the training code for automated hyperparameter search with Optuna
+for the stsb dataset with two languages and crossings.
+"""
+
 import itertools
 import random
 import math
@@ -34,7 +39,9 @@ max_folds = 4
 def load_all_stsb_data(languages):
     data_per_language = []
     for language in languages:
-        stsb_data_train = list(load_dataset("stsb_multi_mt", name=language, split="train"))
+        stsb_data_train = list(
+            load_dataset("stsb_multi_mt", name=language, split="train")
+        )
         stsb_data_dev = list(load_dataset("stsb_multi_mt", name=language, split="dev"))
         stsb_data = stsb_data_train + stsb_data_dev
         assert len(stsb_data) == 5749 + 1500
@@ -92,7 +99,7 @@ def fit_model(trial, train_fold, val_fold, fold_index):
     eps = trial.suggest_uniform("eps", 1e-7, 1e-5)
     weight_decay = trial.suggest_uniform("weight_decay", 0.001, 0.1)
     warmup_steps_mul = trial.suggest_uniform("warmup_steps_mul", 0.1, 0.5)
-    
+
     print("batch_size:", batch_size)
     print("num_epochs:", num_epochs)
     print("lr:", lr)
@@ -104,9 +111,7 @@ def fit_model(trial, train_fold, val_fold, fold_index):
 
     # create train dataloader
     # train_sentece_dataset = SentencesDataset(train_fold, model=model) # this is deprecated
-    train_dataloader = DataLoader(
-        train_fold, shuffle=True, batch_size=batch_size
-    )
+    train_dataloader = DataLoader(train_fold, shuffle=True, batch_size=batch_size)
 
     # define loss
     train_loss = losses.CosineSimilarityLoss(model=model)
@@ -144,14 +149,12 @@ def fit_model(trial, train_fold, val_fold, fold_index):
 def train(trial):
     languages = ["en", "de"]
     crossings = [[0, 1], [1, 0]]
-    
+
     # load all data incl. crossings
-    all_data_stsb_cross_data = load_all_data(
-        languages, crossings
-    )
+    all_data_stsb_cross_data = load_all_data(languages, crossings)
     assert len(all_data_stsb_cross_data) == 4
     assert len(all_data_stsb_cross_data[0]) == 5749 + 1500
-    
+
     xval_indexes = np.arange(len(all_data_stsb_cross_data[0]))
 
     results = []
@@ -189,12 +192,12 @@ def train(trial):
         if mean_result < 0.1:
             print("### HARD PRUNING")
             return mean_result
-        
+
         trial.report(result, fold_index)
         if trial.should_prune():
             print("### PRUNING")
             break
-            
+
     return mean_result
 
 
@@ -215,9 +218,9 @@ if __name__ == "__main__":
         load_if_exists=True,
         direction="maximize",
         pruner=SignificanceRepeatedTrainingPruner(
-            alpha=0.4, 
+            alpha=0.4,
             n_warmup_steps=4,
-        )
+        ),
     )
 
     study.optimize(ex_wrapper)
