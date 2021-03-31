@@ -1,10 +1,13 @@
 import itertools
 import random
 import math
+import logging
 import numpy as np
 from sklearn.model_selection import KFold
 import optuna
 from torch.utils.data import DataLoader
+from mltb.optuna import SignificanceRepeatedTrainingPruner
+from datasets import load_dataset
 from sentence_transformers import (
     InputExample,
     SentenceTransformer,
@@ -16,10 +19,14 @@ from sentence_transformers.evaluation import (
     SimilarityFunction,
 )
 
-from load_data import load_stsb_train_dev_data, load_xnli_data
+
+# init root logger
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+root_logger.addHandler(logging.StreamHandler())
 
 
-study_name = "stsb_xnli_de_en_cross_01"
+study_name = "xlsr_de_en_cross_stsb_08"
 model_name = "xlm-r-distilroberta-base-paraphrase-v1"
 max_folds = 4
 
@@ -27,18 +34,11 @@ max_folds = 4
 def load_all_stsb_data(languages):
     data_per_language = []
     for language in languages:
-        stsb_data = load_stsb_train_dev_data(language)
+        stsb_data_train = list(load_dataset("stsb_multi_mt", name=language, split="train"))
+        stsb_data_dev = list(load_dataset("stsb_multi_mt", name=language, split="dev"))
+        stsb_data = stsb_data_train + stsb_data_dev
         assert len(stsb_data) == 5749 + 1500
         data_per_language.append(stsb_data)
-    return data_per_language
-
-
-def load_all_xnli_data(languages, label_map):
-    data_per_language = []
-    for language in languages:
-        xnli_data = load_xnli_data(language, label_map)
-        assert len(xnli_data) == 7500
-        data_per_language.append(xnli_data)
     return data_per_language
 
 
@@ -62,12 +62,10 @@ def add_cross_data(data_per_language, crossings):
     return result
 
 
-def load_all_data(languages, label_map, crossings):
+def load_all_data(languages, crossings):
     all_stsb_data = load_all_stsb_data(languages)
-    all_xnli_data = load_all_xnli_data(languages, label_map)
     all_data_stsb_cross_data = add_cross_data(all_stsb_data, crossings)
-    all_data_xnli_cross_data = add_cross_data(all_xnli_data, crossings)
-    return all_data_stsb_cross_data, all_data_xnli_cross_data
+    return all_data_stsb_cross_data
 
 
 def to_input_example(language_list):
@@ -76,7 +74,7 @@ def to_input_example(language_list):
         result.append(
             InputExample(
                 texts=[dataset["sentence1"], dataset["sentence2"]],
-                label=dataset["similarity_score"],
+                label=(dataset["similarity_score"] / 5),
             )
         )
     return result
@@ -88,28 +86,34 @@ def fit_model(trial, train_fold, val_fold, fold_index):
     print("len(train_fold)", len(train_fold))
     print("len(val_fold)", len(val_fold))
 
-    batch_size = trial.suggest_int("batch_size", 4, 50)
+    batch_size = trial.suggest_int("train_batch_size", 4, 50)
     num_epochs = trial.suggest_int("num_epochs", 1, 3)
     lr = trial.suggest_uniform("lr", 2e-6, 2e-4)
     eps = trial.suggest_uniform("eps", 1e-7, 1e-5)
     weight_decay = trial.suggest_uniform("weight_decay", 0.001, 0.1)
     warmup_steps_mul = trial.suggest_uniform("warmup_steps_mul", 0.1, 0.5)
+    
+    print("batch_size:", batch_size)
+    print("num_epochs:", num_epochs)
+    print("lr:", lr)
+    print("eps:", eps)
+    print("weight_decay:", weight_decay)
+    print("warmup_steps_mul:", warmup_steps_mul)
 
     model = SentenceTransformer(model_name)
 
     # create train dataloader
-    train_sentece_dataset = SentencesDataset(train_fold, model=model)
+    # train_sentece_dataset = SentencesDataset(train_fold, model=model) # this is deprecated
     train_dataloader = DataLoader(
-        train_sentece_dataset, shuffle=True, batch_size=batch_size
+        train_fold, shuffle=True, batch_size=batch_size
     )
 
     # define loss
     train_loss = losses.CosineSimilarityLoss(model=model)
 
     warmup_steps = math.ceil(
-        len(train_sentece_dataset) * num_epochs / batch_size * warmup_steps_mul
+        len(train_fold) * num_epochs / batch_size * warmup_steps_mul
     )
-    print("warmup_steps:", warmup_steps)
 
     # Train the model
     model.fit(
@@ -139,29 +143,15 @@ def fit_model(trial, train_fold, val_fold, fold_index):
 
 def train(trial):
     languages = ["en", "de"]
-    label_map = {
-        "contradiction": -1.0,
-        "entailment": 1.0,
-        "neutral": 0.0,
-    }
     crossings = [[0, 1], [1, 0]]
-
+    
     # load all data incl. crossings
-    all_data_stsb_cross_data, all_data_xnli_cross_data = load_all_data(
-        languages, label_map, crossings
+    all_data_stsb_cross_data = load_all_data(
+        languages, crossings
     )
     assert len(all_data_stsb_cross_data) == 4
     assert len(all_data_stsb_cross_data[0]) == 5749 + 1500
-    assert len(all_data_xnli_cross_data) == 4
-    assert len(all_data_xnli_cross_data[0]) == 7500
-
-    # xnli data can be flattened here since we do no xvalidation on it
-    # we only mix it into the train set
-    all_data_xnli_cross_data = list(
-        itertools.chain.from_iterable(all_data_xnli_cross_data)
-    )
-    assert len(all_data_xnli_cross_data) == 7500 * 4
-
+    
     xval_indexes = np.arange(len(all_data_stsb_cross_data[0]))
 
     results = []
@@ -180,9 +170,6 @@ def train(trial):
 
         assert len(train_fold) + len(val_fold) == (5749 + 1500) * 4
 
-        # add xnli to train data
-        train_fold.extend(all_data_xnli_cross_data)
-
         # shuffle with seed
         random.Random(42).shuffle(train_fold)
         random.Random(42).shuffle(val_fold)
@@ -198,8 +185,17 @@ def train(trial):
         trial.set_user_attr("results", str(results))
         mean_result = np.mean(results)
 
-        if (mean_result < 0.1) or (fold_index >= max_folds - 1):
+        # hard pruning
+        if mean_result < 0.1:
+            print("### HARD PRUNING")
             return mean_result
+        
+        trial.report(result, fold_index)
+        if trial.should_prune():
+            print("### PRUNING")
+            break
+            
+    return mean_result
 
 
 def ex_wrapper(trial):
@@ -218,6 +214,10 @@ if __name__ == "__main__":
         storage="sqlite:///optuna.db",
         load_if_exists=True,
         direction="maximize",
+        pruner=SignificanceRepeatedTrainingPruner(
+            alpha=0.4, 
+            n_warmup_steps=4,
+        )
     )
 
     study.optimize(ex_wrapper)
