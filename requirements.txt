@@ -2,7 +2,7 @@ sentence-transformers
 pandas
 numpy
 scikit-learn
-mltb==0.7.dev3
+mltb==0.8.dev2
 datasets
 black
 flake8
@@ -11,3 +11,5 @@ rope
 pytest
 optuna
 protobuf
+scipy
+datasets
