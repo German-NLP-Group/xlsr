@@ -1,6 +1,7 @@
 """
 This is the training code for automated hyperparameter search with Optuna
 for the stsb dataset with two languages and crossings.
+We also add dropout to the model.
 """
 
 import itertools
@@ -31,7 +32,7 @@ root_logger.setLevel(logging.INFO)
 root_logger.addHandler(logging.StreamHandler())
 
 
-study_name = "xlsr_de_en_cross_stsb_08_do_01"
+study_name = "xlsr_de_en_cross_stsb_08_do_02"
 model_name = "xlm-r-distilroberta-base-paraphrase-v1"
 max_folds = 3
 
@@ -99,23 +100,14 @@ def fit_model(trial, train_fold, val_fold, fold_index):
     eps = trial.suggest_uniform("eps", 1e-7, 1e-5)
     weight_decay = trial.suggest_uniform("weight_decay", 0.001, 0.1)
     warmup_steps_mul = trial.suggest_uniform("warmup_steps_mul", 0.1, 0.5)
-    attention_probs_dropout_prob = trial.suggest_uniform("attention_probs_dropout_prob", 0.1, 0.3)
-    hidden_dropout_prob = trial.suggest_uniform("hidden_dropout_prob", 0.1, 0.3)
-    
-
-    print("batch_size:", batch_size)
-    print("num_epochs:", num_epochs)
-    print("lr:", lr)
-    print("eps:", eps)
-    print("weight_decay:", weight_decay)
-    print("warmup_steps_mul:", warmup_steps_mul)
+    #attention_probs_dropout_prob = trial.suggest_uniform("attention_probs_dropout_prob", 0.1, 0.101)
+    hidden_dropout_prob = trial.suggest_uniform("hidden_dropout_prob", 0.1, 0.15)
 
     model = SentenceTransformer(model_name)
     
     # change dropout of the model
-    model._modules['0'].auto_model.base_model.config.attention_probs_dropout_prob = attention_probs_dropout_prob
+    #model._modules['0'].auto_model.base_model.config.attention_probs_dropout_prob = attention_probs_dropout_prob
     model._modules['0'].auto_model.base_model.config.hidden_dropout_prob = hidden_dropout_prob
-
 
     # create train dataloader
     # train_sentece_dataset = SentencesDataset(train_fold, model=model) # this is deprecated
