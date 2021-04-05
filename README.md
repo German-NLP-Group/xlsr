@@ -10,23 +10,32 @@ This is ongoing research. If you have ideas or want to drop a comment just
 - stsb from [STSb Multi MT](https://github.com/PhilipMay/stsb-multi-mt)
   - 5749 test samples per language
   - 1500 dev samples per language
+  - the labels are `>= 0.0` and `<= 5.0` we devide them by 5 so they are `>= 0.0` and `<= 1.0`
 - XNLI 1.0 from https://github.com/facebookresearch/XNLI
   - 2490 dev samples per language
   - 5010 test samples per language
-
-## Preprocessing
-- the stsb label are `>= 0.0` and `<= 5.0` we devide them by 5 so they are `>= 0.0` and `<= 1.0`
-- we have to convert the XNLI label to float numberts so they match those of stsb
-  - contradiction to -1.0
-  - entailment to 1.0
-  - neutral to 0.0
-
-My using the contradiction samples from XNLI we also get negative values. Our hypothesis is that this benefits the model.
+  - we have to convert the XNLI label to float numberts so they match those of stsb
+    - contradiction to -1.0
+    - entailment to 1.0
+    - neutral to 0.0
 
 ## Hyperparameter Search
-- we do a 10 fold cross validation over concatenation of stsb-train and stsb-dev
-- during cross validaton we concatate all XNLI data (dev and test) to the train data of each fold
+- we do a 10 fold cross validation over concatenation of stsb-train and stsb-dev (but not XNLI)
+- we use Optuna
+- if we use XNLI data (dev and test) we concatenate it to the train data of each fold
 
+## Results and Findings
+- adding all XNLI data to the train data (stsb) had no positive effect
+- adding just XNLI entailment and neutral data to the train data (stsb) had no positive effect
+- adding just XNLI entailment to the train data (stsb) had no positive effect
+- we tried to add dropout for more regularization - since [sentence-transformers](https://github.com/UKPLab/sentence-transformers/) do not have a prediction head we had to modify the language model itself
+  - see discussion here: https://github.com/UKPLab/sentence-transformers/issues/846 
+  - we tried to change `attention_probs_dropout_prob` and `hidden_dropout_prob` by adding them as hyperparameters to Optuna
+  - `model._modules['0'].auto_model.base_model.config.attention_probs_dropout_prob = attention_probs_dropout_prob`
+  - `model._modules["0"].auto_model.base_model.config.hidden_dropout_prob = hidden_dropout_prob`
+  - this had no positive effect
+  - just changing `hidden_dropout_prob` also had no positive effect
+  
 ## Variations of the Experiment
 Things that can be tested:
 - reduce label for entailment to something `< 1.0`
