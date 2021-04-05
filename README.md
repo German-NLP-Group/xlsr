@@ -24,6 +24,14 @@ This is ongoing research. If you have ideas or want to drop a comment just
 - we use Optuna
 - if we use XNLI data (dev and test) we concatenate it to the train data of each fold
 
+## Ideas and Variations of the Experiment
+Things that can be tested:
+- reduce label for entailment to something `< 1.0`
+- only use contradiction from XNLI and not entailment and neutral
+- test with one language (de or en) and a mix of both
+- test with 3 languages
+- test with other base models from here https://github.com/UKPLab/sentence-transformers/blob/master/docs/pretrained_models.md#multi-lingual-models
+
 ## Results and Findings
 - adding all XNLI data to the train data (stsb) had no positive effect
 - adding just XNLI entailment and neutral data to the train data (stsb) had no positive effect
@@ -35,11 +43,3 @@ This is ongoing research. If you have ideas or want to drop a comment just
   - `model._modules["0"].auto_model.base_model.config.hidden_dropout_prob = hidden_dropout_prob`
   - this had no positive effect
   - just changing `hidden_dropout_prob` also had no positive effect
-  
-## Variations of the Experiment
-Things that can be tested:
-- reduce label for entailment to something `< 1.0`
-- only use contradiction from XNLI and not entailment and neutral
-- test with one language (de or en) and a mix of both
-- test with 3 languages
-- test with other base models from here https://github.com/UKPLab/sentence-transformers/blob/master/docs/pretrained_models.md#multi-lingual-models
