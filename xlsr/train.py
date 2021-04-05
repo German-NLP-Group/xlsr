@@ -1,6 +1,8 @@
 """
 This is the training code for automated hyperparameter search with Optuna
 for the stsb dataset with two languages and crossings.
+
+No XNLI data is used.
 """
 
 import itertools
@@ -94,18 +96,11 @@ def fit_model(trial, train_fold, val_fold, fold_index):
     print("len(val_fold)", len(val_fold))
 
     batch_size = trial.suggest_int("train_batch_size", 4, 50)
-    num_epochs = trial.suggest_int("num_epochs", 1, 3)
+    num_epochs = trial.suggest_int("num_epochs", 1, 4)
     lr = trial.suggest_uniform("lr", 2e-6, 2e-4)
     eps = trial.suggest_uniform("eps", 1e-7, 1e-5)
     weight_decay = trial.suggest_uniform("weight_decay", 0.001, 0.1)
     warmup_steps_mul = trial.suggest_uniform("warmup_steps_mul", 0.1, 0.5)
-
-    print("batch_size:", batch_size)
-    print("num_epochs:", num_epochs)
-    print("lr:", lr)
-    print("eps:", eps)
-    print("weight_decay:", weight_decay)
-    print("warmup_steps_mul:", warmup_steps_mul)
 
     model = SentenceTransformer(model_name)
 

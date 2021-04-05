@@ -2,7 +2,7 @@
 This is the training code for automated hyperparameter search with Optuna
 for the stsb dataset with two languages and crossings.
 
-We also add dropout to the model.
+This adds XLNI data to the train data.
 """
 
 import itertools
@@ -10,6 +10,8 @@ import random
 import math
 import logging
 import numpy as np
+import pandas as pd
+import os
 from sklearn.model_selection import KFold
 import optuna
 from torch.utils.data import DataLoader
@@ -32,10 +34,52 @@ root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
 root_logger.addHandler(logging.StreamHandler())
 
-
-study_name = "xlsr_de_en_cross_stsb_08_do_02"
+study_name = "xlsr_de_en_cross_stsb_08_xnli_02"
 model_name = "xlm-r-distilroberta-base-paraphrase-v1"
-max_folds = 3
+max_folds = 4
+
+BASE_DATA_PATH = "./data"
+BASE_XNLI_FILENAME = "xnli-1.0-all-{}.csv"
+
+
+def load_xnli_entailment_data(language, entailment_label):
+    df = pd.read_csv(
+        os.path.join(BASE_DATA_PATH, BASE_XNLI_FILENAME.format(language)),
+        low_memory=False,
+    )
+    df.drop("language", axis=1, inplace=True)
+    df = df[df["gold_label"] == "entailment"]
+    result = df.to_dict("records")
+    for r in result:
+        assert r["gold_label"] == "entailment"
+        r["similarity_score"] = entailment_label
+        del r["gold_label"]
+    return result
+
+
+def load_all_xnli_data(languages, entailment_label, entailment_proportion, crossings):
+    data_per_language = []
+    for language in languages:
+        xnli_data = load_xnli_entailment_data(language, entailment_label)
+        assert len(xnli_data) == 2500
+        data_per_language.append(xnli_data)
+
+    # add crossings
+    data_per_language = add_cross_data(data_per_language, crossings)
+    assert len(data_per_language) == 4
+    assert len(data_per_language[0]) == 2500
+
+    # flatten the list
+    result = list(itertools.chain.from_iterable(data_per_language))
+    assert len(result) == 2500 * 4
+
+    random.Random(42).shuffle(result)
+
+    # select the entailment proportion
+    entailment_samples = math.ceil(len(result) * entailment_proportion)
+    result = result[:entailment_samples]
+
+    return result
 
 
 def load_all_stsb_data(languages):
@@ -96,21 +140,13 @@ def fit_model(trial, train_fold, val_fold, fold_index):
     print("len(val_fold)", len(val_fold))
 
     batch_size = trial.suggest_int("train_batch_size", 4, 50)
-    num_epochs = trial.suggest_int("num_epochs", 1, 3)
+    num_epochs = trial.suggest_int("num_epochs", 2, 4)
     lr = trial.suggest_uniform("lr", 2e-6, 2e-4)
     eps = trial.suggest_uniform("eps", 1e-7, 1e-5)
     weight_decay = trial.suggest_uniform("weight_decay", 0.001, 0.1)
     warmup_steps_mul = trial.suggest_uniform("warmup_steps_mul", 0.1, 0.5)
-    # attention_probs_dropout_prob = trial.suggest_uniform("attention_probs_dropout_prob", 0.1, 0.101)
-    hidden_dropout_prob = trial.suggest_uniform("hidden_dropout_prob", 0.1, 0.15)
 
     model = SentenceTransformer(model_name)
-
-    # change dropout of the model
-    # model._modules['0'].auto_model.base_model.config.attention_probs_dropout_prob = attention_probs_dropout_prob
-    model._modules[
-        "0"
-    ].auto_model.base_model.config.hidden_dropout_prob = hidden_dropout_prob
 
     # create train dataloader
     # train_sentece_dataset = SentencesDataset(train_fold, model=model) # this is deprecated
@@ -176,6 +212,17 @@ def train(trial):
 
         assert len(train_fold) + len(val_fold) == (5749 + 1500) * 4
 
+        # add xlni data
+        xnli_entailment_label = trial.suggest_uniform("xnli_entailment_label", 0.5, 1.0)
+        xnli_entailment_proportion = trial.suggest_uniform(
+            "xnli_entailment_proportion", 0.0, 1.0
+        )
+        xlni_data = load_all_xnli_data(
+            languages, xnli_entailment_label, xnli_entailment_proportion, crossings
+        )
+        if len(xlni_data) > 0:
+            train_fold.extend(xlni_data)
+
         # shuffle with seed
         random.Random(42).shuffle(train_fold)
         random.Random(42).shuffle(val_fold)
@@ -210,6 +257,7 @@ def ex_wrapper(trial):
     except Exception as e:
         print(e)
         trial.set_user_attr("exception", str(e))
+        # raise
         return float("nan")
 
 
@@ -221,7 +269,7 @@ if __name__ == "__main__":
         load_if_exists=True,
         direction="maximize",
         pruner=SignificanceRepeatedTrainingPruner(
-            alpha=0.3,
+            alpha=0.4,
             n_warmup_steps=max_folds,
         ),
     )
