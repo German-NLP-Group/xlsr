@@ -132,4 +132,7 @@ dmypy.json
 data/
 .vscode/
 legacy/
-optuna.db
+*.db
+models*
+plots/
+
