@@ -11,6 +11,7 @@ This is ongoing research. If you have ideas or want to drop a comment just
 - `train_models_2_lang.py` - create and save model with two languages
 
 ## Models
+- [T-Systems-onsite/cross-en-de-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-de-roberta-sentence-transformer)
 - [T-Systems-onsite/cross-de-es-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-es-roberta-sentence-transformer)
 - [T-Systems-onsite/cross-de-fr-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-fr-roberta-sentence-transformer)
 - [T-Systems-onsite/cross-de-it-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-it-roberta-sentence-transformer)
