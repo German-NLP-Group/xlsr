@@ -10,6 +10,15 @@ This is ongoing research. If you have ideas or want to drop a comment just
 - `train_optuna_stsb_do.py` - hyperparameter search for stsb data with dropout
 - `train_models_2_lang.py` - create and save model with two languages
 
+## Models
+- [T-Systems-onsite/cross-de-es-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-es-roberta-sentence-transformer)
+- [T-Systems-onsite/cross-de-fr-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-fr-roberta-sentence-transformer)
+- [T-Systems-onsite/cross-de-it-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-it-roberta-sentence-transformer)
+- [T-Systems-onsite/cross-de-nl-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-nl-roberta-sentence-transformer)
+- [T-Systems-onsite/cross-de-pl-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-pl-roberta-sentence-transformer)
+- [T-Systems-onsite/cross-de-pt-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-pt-roberta-sentence-transformer)
+- [T-Systems-onsite/cross-de-ru-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-ru-roberta-sentence-transformer)
+
 ## Data
 - stsb from [STSb Multi MT](https://github.com/PhilipMay/stsb-multi-mt)
   - 5749 test samples per language
