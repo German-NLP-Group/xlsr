@@ -26,6 +26,7 @@ This is ongoing research. If you have ideas or want to drop a comment just
 - [T-Systems-onsite/cross-en-nl-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-nl-roberta-sentence-transformer)
 - [T-Systems-onsite/cross-en-pl-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-pl-roberta-sentence-transformer)
 - [T-Systems-onsite/cross-en-pt-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-pt-roberta-sentence-transformer)
+- [T-Systems-onsite/cross-en-ru-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-ru-roberta-sentence-transformer)
 
 ## Data
 - stsb from [STSb Multi MT](https://github.com/PhilipMay/stsb-multi-mt)
