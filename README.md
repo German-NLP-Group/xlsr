@@ -1,10 +1,14 @@
 # XLSR - Cross-Lingual Sentence Representations
-Cross-Lingual Sentence Representations
-
 The goal of this project is to provide models that further increase the performance of [T-Systems-onsite/cross-en-de-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-de-roberta-sentence-transformer).
 
 This is ongoing research. If you have ideas or want to drop a comment just
 [open up an issue](https://github.com/German-NLP-Group/xlsr/issues/new) here on GitHub.
+
+## Contents
+- `train_optuna_stsb.py` - hyperparameter search for stsb data
+- `train_optuna_stsb_xlni.py` - hyperparameter search for stsb with xlni data
+- `train_optuna_stsb_do.py` - hyperparameter search for stsb data with dropout
+- `train_models_2_lang.py` - create and save model with two languages
 
 ## Data
 - stsb from [STSb Multi MT](https://github.com/PhilipMay/stsb-multi-mt)
