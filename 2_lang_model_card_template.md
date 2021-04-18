@@ -57,7 +57,7 @@ The resulting model called `xlm-r-distilroberta-base-paraphrase-v1` has been rel
 
 Building on this cross language model we fine-tuned it for two languages on the [stsb_multi_mt](https://huggingface.co/datasets/stsb_multi_mt) dataset. Additionally to the training samples from the two laguages we generated crossed samples. We call this _multilingual finetuning with language-crossing_. It doubled the traing-datasize and tests show that it further improves performance.
 
-We did an automatic hyperparameter search for 33 trials with [Optuna](https://github.com/optuna/optuna). Using 10-fold crossvalidation on the deepl.com test and dev dataset we found the following best hyperparameters:
+We did an automatic hyperparameter search with [Optuna](https://github.com/optuna/optuna). Using 10-fold crossvalidation on the deepl.com test and dev dataset we found the following best hyperparameters:
 - batch_size = 8
 - num_epochs = 2
 - lr = 1.026343323298136e-05,
@@ -65,16 +65,7 @@ We did an automatic hyperparameter search for 33 trials with [Optuna](https://gi
 - weight_decay = 0.04794438776350409
 - warmup_steps_proportion = 0.1609010732760181
 
-The final model was trained with these hyperparameters on the combination of the train and dev datasets from English, German and the crossings of them. The testset was left for testing.
+The final model was trained with these hyperparameters on the combination of the train and dev datasets from both languages and the crossings of them. The testset was left for testing.
 
-# Evaluation
-The evaluation has been done on English, German and both languages crossed with the STSbenchmark test data. The evaluation-code is available on [Colab](https://colab.research.google.com/drive/1gtGnKq_dYU_sDYqMohTYVMVpxMJjyH0M?usp=sharing). As the metric for evaluation we use the Spearman’s rank correlation between the  cosine-similarity of the sentence embeddings and STSbenchmark labels.
-
-| Model Name                                                    | Spearman<br/>German | Spearman<br/>English | Spearman<br/>EN-DE & DE-EN<br/>(cross) |
-|---------------------------------------------------------------|-------------------|--------------------|------------------|
-| xlm-r-distilroberta-base-paraphrase-v1                        | 0.8079            | 0.8350             | 0.7983           |
-| [xlm-r-100langs-bert-base-nli-stsb-mean-tokens](https://huggingface.co/sentence-transformers/xlm-r-100langs-bert-base-nli-stsb-mean-tokens)                 | 0.7877            | 0.8465             | 0.7908           |
-| xlm-r-bert-base-nli-stsb-mean-tokens                          | 0.7877            | 0.8465             | 0.7908           |
-| [roberta-large-nli-stsb-mean-tokens](https://huggingface.co/sentence-transformers/roberta-large-nli-stsb-mean-tokens)                            | 0.6371            | 0.8639             | 0.4109           |
-| [T-Systems-onsite/<br/>german-roberta-sentence-transformer-v2](https://huggingface.co/T-Systems-onsite/german-roberta-sentence-transformer-v2)       | 0.8529            | 0.8634             | 0.8415           |
-| **T-Systems-onsite/<br/>cross-en-de-roberta-sentence-transformer** | **0.8550**        |  **0.8660**        | **0.8525**       |
+# Test Set Evaluation Results
+The evaluation has been done on language one, language two, the crossing of both languages and everything. As the metric for evaluation we use the Spearman’s rank correlation between the cosine-similarity of the sentence embeddings and STSbenchmark labels.
