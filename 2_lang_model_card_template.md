@@ -1,7 +1,7 @@
 ---
 language: 
-- <???>
-- <???>
+- _???_
+- _???_
 license: mit
 tags:
 - sentence_embedding
@@ -18,8 +18,8 @@ metrics:
 - cosine similarity
 ---
 
-# Cross <???> & <???> RoBERTa for Sentence Embeddings
-This model is intended to [compute sentence (text) embeddings](https://www.sbert.net/docs/usage/computing_sentence_embeddings.html) for <???> and <???> text. These embeddings can then be compared with [cosine-similarity](https://en.wikipedia.org/wiki/Cosine_similarity) to find sentences with a similar semantic meaning. For example this can be useful for [semantic textual similarity](https://www.sbert.net/docs/usage/semantic_textual_similarity.html), [semantic search](https://www.sbert.net/docs/usage/semantic_search.html), or [paraphrase mining](https://www.sbert.net/docs/usage/paraphrase_mining.html). To do this you have to use the [Sentence Transformers Python framework](https://github.com/UKPLab/sentence-transformers).
+# Cross _???_ & _???_ RoBERTa for Sentence Embeddings
+This model is intended to [compute sentence (text) embeddings](https://www.sbert.net/docs/usage/computing_sentence_embeddings.html) for _???_ and _???_ text. These embeddings can then be compared with [cosine-similarity](https://en.wikipedia.org/wiki/Cosine_similarity) to find sentences with a similar semantic meaning. For example this can be useful for [semantic textual similarity](https://www.sbert.net/docs/usage/semantic_textual_similarity.html), [semantic search](https://www.sbert.net/docs/usage/semantic_search.html), or [paraphrase mining](https://www.sbert.net/docs/usage/paraphrase_mining.html). To do this you have to use the [Sentence Transformers Python framework](https://github.com/UKPLab/sentence-transformers).
 
 The speciality of this model is that it also works cross-lingually. Regardless of the language, the sentences are translated into very similar vectors according to their semantics. This means that you can, for example, enter a search in one language and find results according to the semantics in both languages. We have found empirically that using a xlm model and _multilingual finetuning with language-crossing_ increases performance compared to using just one language.
 
