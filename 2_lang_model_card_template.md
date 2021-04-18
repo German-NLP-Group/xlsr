@@ -1,7 +1,7 @@
 ---
 language: 
-- de
-- en
+- <???>
+- <???>
 license: mit
 tags:
 - sentence_embedding
@@ -12,16 +12,16 @@ tags:
 - xlm-r-distilroberta-base-paraphrase-v1
 - paraphrase
 datasets:
-- STSbenchmark
+- stsb_multi_mt
 metrics:
 - Spearman’s rank correlation
 - cosine similarity
 ---
 
-# Cross English & German RoBERTa for Sentence Embeddings
-This model is intended to [compute sentence (text) embeddings](https://www.sbert.net/docs/usage/computing_sentence_embeddings.html) for English and German text. These embeddings can then be compared with [cosine-similarity](https://en.wikipedia.org/wiki/Cosine_similarity) to find sentences with a similar semantic meaning. For example this can be useful for [semantic textual similarity](https://www.sbert.net/docs/usage/semantic_textual_similarity.html), [semantic search](https://www.sbert.net/docs/usage/semantic_search.html), or [paraphrase mining](https://www.sbert.net/docs/usage/paraphrase_mining.html). To do this you have to use the [Sentence Transformers Python framework](https://github.com/UKPLab/sentence-transformers).
+# Cross <???> & <???> RoBERTa for Sentence Embeddings
+This model is intended to [compute sentence (text) embeddings](https://www.sbert.net/docs/usage/computing_sentence_embeddings.html) for <???> and <???> text. These embeddings can then be compared with [cosine-similarity](https://en.wikipedia.org/wiki/Cosine_similarity) to find sentences with a similar semantic meaning. For example this can be useful for [semantic textual similarity](https://www.sbert.net/docs/usage/semantic_textual_similarity.html), [semantic search](https://www.sbert.net/docs/usage/semantic_search.html), or [paraphrase mining](https://www.sbert.net/docs/usage/paraphrase_mining.html). To do this you have to use the [Sentence Transformers Python framework](https://github.com/UKPLab/sentence-transformers).
 
-The speciality of this model is that it also works cross-lingually. Regardless of the language, the sentences are translated into very similar vectors according to their semantics. This means that you can, for example, enter a search in German and find results according to the semantics in German and also in English. Using a xlm model and _multilingual finetuning with language-crossing_ we reach performance that even exceeds the best current dedicated English large model (see Evaluation section below).
+The speciality of this model is that it also works cross-lingually. Regardless of the language, the sentences are translated into very similar vectors according to their semantics. This means that you can, for example, enter a search in one language and find results according to the semantics in both languages. We have found empirically that using a xlm model and _multilingual finetuning with language-crossing_ increases performance compared to using just one language.
 
 > Sentence-BERT (SBERT) is a  modification  of  the  pretrained BERT network that use siamese and triplet network structures to derive semantically meaningful sentence embeddings that can be compared using cosine-similarity. This reduces the effort for finding the most similar pair from 65hours with BERT / RoBERTa to about 5 seconds with SBERT, while maintaining the accuracy from BERT.
 
