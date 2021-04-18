@@ -27,17 +27,12 @@ The speciality of this model is that it also works cross-lingually. Regardless o
 
 Source: [Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https://arxiv.org/abs/1908.10084)
 
-This model is fine-tuned from [Philip May](https://eniak.de/) and open-sourced by [T-Systems-onsite](https://www.t-systems-onsite.de/). Special thanks to [Nils Reimers](https://www.nils-reimers.de/) for your awesome open-source work, the Sentence Transformers, the models and your help on GitHub.
+This model is fine-tuned from [Philip May](https://may.la/) and open-sourced by [T-Systems-onsite](https://www.t-systems-onsite.de/). Special thanks to [Nils Reimers](https://www.nils-reimers.de/) for your awesome open-source work, the Sentence Transformers, the models and your help on GitHub.
 
 ## How to use
 **The usage description above - provided by Hugging Face - is wrong for sentence embeddings! Please use this:**
 
-To use this model install the `sentence-transformers` package (see here: <https://github.com/UKPLab/sentence-transformers>).
-
-```python
-from sentence_transformers import SentenceTransformer
-model = SentenceTransformer('T-Systems-onsite/cross-en-de-roberta-sentence-transformer')
-```
+To use this model install and use the `sentence-transformers` package (see here: <https://github.com/UKPLab/sentence-transformers>).
 
 For details of usage and examples see here:
 - [Computing Sentence Embeddings](https://www.sbert.net/docs/usage/computing_sentence_embeddings.html)
@@ -60,9 +55,9 @@ The base model is [xlm-roberta-base](https://huggingface.co/xlm-roberta-base). T
 
 The resulting model called `xlm-r-distilroberta-base-paraphrase-v1` has been released here: <https://github.com/UKPLab/sentence-transformers/releases/tag/v0.3.8>
 
-Building on this cross language model we fine-tuned it for English and German language on the [STSbenchmark](http://ixa2.si.ehu.es/stswiki/index.php/STSbenchmark) dataset. For German language we used the dataset of our [German STSbenchmark dataset](https://github.com/t-systems-on-site-services-gmbh/german-STSbenchmark) which has been translated with [deepl.com](https://www.deepl.com/translator). Additionally to the German and English training samples we generated samples of English and German crossed. We call this _multilingual finetuning with language-crossing_. It doubled the traing-datasize and tests show that it further improves performance.
+Building on this cross language model we fine-tuned it for two languages on the [stsb_multi_mt](https://huggingface.co/datasets/stsb_multi_mt) dataset. Additionally to the training samples from the two laguages we generated crossed samples. We call this _multilingual finetuning with language-crossing_. It doubled the traing-datasize and tests show that it further improves performance.
 
-We did an automatic hyperparameter search for 33 trials with [Optuna](https://github.com/optuna/optuna). Using 10-fold crossvalidation on the deepl.com test and dev dataset we found the following best hyperparameter:
+We did an automatic hyperparameter search for 33 trials with [Optuna](https://github.com/optuna/optuna). Using 10-fold crossvalidation on the deepl.com test and dev dataset we found the following best hyperparameters:
 - batch_size = 8
 - num_epochs = 2
 - lr = 1.026343323298136e-05,
