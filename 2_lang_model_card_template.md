@@ -67,3 +67,7 @@ The final model was trained with these hyperparameters on the combination of the
 
 # Test Set Evaluation Results
 The evaluation has been done on language one, language two, the crossing of both languages and everything. As the metric for evaluation we use the Spearman’s rank correlation between the cosine-similarity of the sentence embeddings and STSbenchmark labels.
+- Spearman correlation _???_: _???_
+- Spearman correlation _???_: _???_
+- Spearman correlation both languages crossed: _???_
+- Spearman correlation of everything: _???_
