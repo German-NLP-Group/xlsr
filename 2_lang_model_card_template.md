@@ -30,8 +30,6 @@ Source: [Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks](https:/
 This model is fine-tuned from [Philip May](https://may.la/) and open-sourced by [T-Systems-onsite](https://www.t-systems-onsite.de/). Special thanks to [Nils Reimers](https://www.nils-reimers.de/) for your awesome open-source work, the Sentence Transformers, the models and your help on GitHub. The complete training code and more experiments have also been released here: [German-NLP-Group/xlsr](https://github.com/German-NLP-Group/xlsr)
 
 ## How to use
-**The usage description above - provided by Hugging Face - is wrong for sentence embeddings! Please use this:**
-
 To use this model install and use the `sentence-transformers` package (see here: <https://github.com/UKPLab/sentence-transformers>).
 
 For details of usage and examples see here:
