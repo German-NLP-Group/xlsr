@@ -32,14 +32,6 @@ This model is fine-tuned from [Philip May](https://may.la/) and open-sourced by 
 ## How to use
 To use this model install and use the `sentence-transformers` package (see here: <https://github.com/UKPLab/sentence-transformers>).
 
-For details of usage and examples see here:
-- [Computing Sentence Embeddings](https://www.sbert.net/docs/usage/computing_sentence_embeddings.html)
-- [Semantic Textual Similarity](https://www.sbert.net/docs/usage/semantic_textual_similarity.html)
-- [Paraphrase Mining](https://www.sbert.net/docs/usage/paraphrase_mining.html)
-- [Semantic Search](https://www.sbert.net/docs/usage/semantic_search.html)
-- [Cross-Encoders](https://www.sbert.net/docs/usage/cross-encoder.html)
-- [Examples on GitHub](https://github.com/UKPLab/sentence-transformers/tree/master/examples)
-
 ## Training
 The base model is [xlm-roberta-base](https://huggingface.co/xlm-roberta-base). This model has been further trained by [Nils Reimers](https://www.nils-reimers.de/) on a large scale paraphrase dataset for 50+ languages. [Nils Reimers](https://www.nils-reimers.de/) about this [on GitHub](https://github.com/UKPLab/sentence-transformers/issues/509#issuecomment-712243280):
 
