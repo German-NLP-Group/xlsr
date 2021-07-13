@@ -11,7 +11,6 @@ import json
 import os
 import numpy as np
 from sklearn.model_selection import KFold
-import optuna
 from torch.utils.data import DataLoader
 from datasets import load_dataset
 from sentence_transformers import (
