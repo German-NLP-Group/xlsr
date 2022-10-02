@@ -31,7 +31,7 @@ root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
 root_logger.addHandler(logging.StreamHandler())
 
-study_name = "stsb_no_cv_01"
+study_name = "stsb_no_cv_remote_01"
 model_name = "xlm-r-distilroberta-base-paraphrase-v1"
 max_folds = 10
 
