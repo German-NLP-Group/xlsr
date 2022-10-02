@@ -2,7 +2,7 @@ sentence-transformers
 pandas
 numpy
 scikit-learn
-mltb==0.8.dev2
+mltb==0.8.0
 datasets
 black
 flake8
