@@ -14,3 +14,4 @@ protobuf
 scipy
 datasets
 psycopg2-binary
+plotly
