@@ -7,6 +7,7 @@ No XNLI data is used.
 
 import itertools
 import random
+from hpoflow import SignificanceRepeatedTrainingPruner
 import math
 import logging
 import numpy as np
@@ -16,7 +17,6 @@ from datasets import load_dataset
 from sentence_transformers import (
     InputExample,
     SentenceTransformer,
-    SentencesDataset,
     losses,
 )
 from sentence_transformers.evaluation import (
@@ -218,6 +218,10 @@ if __name__ == "__main__":
         storage="sqlite:///optuna.db",
         load_if_exists=True,
         direction="maximize",
+        pruner=SignificanceRepeatedTrainingPruner(
+            alpha=0.4,
+            n_warmup_steps=4,
+        )
     )
 
     study.optimize(ex_wrapper)

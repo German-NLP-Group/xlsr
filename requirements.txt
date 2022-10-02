@@ -2,7 +2,7 @@ sentence-transformers
 pandas
 numpy
 scikit-learn
-mltb==0.8.0
+hpoflow
 datasets
 black
 flake8
