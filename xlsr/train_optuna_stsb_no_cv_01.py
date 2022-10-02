@@ -116,7 +116,7 @@ def fit_model(trial, train_fold, val_fold, fold_index):
         evaluator=None,
         epochs=num_epochs,
         warmup_steps=warmup_steps,
-        optimizer_params={"lr": lr, "eps": eps, "correct_bias": False},
+        optimizer_params={"lr": lr, "eps": eps}, #  , "correct_bias": False},
         weight_decay=weight_decay,
     )
 
