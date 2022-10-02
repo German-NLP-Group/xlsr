@@ -13,3 +13,4 @@ optuna
 protobuf
 scipy
 datasets
+psycopg2
