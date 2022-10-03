@@ -31,7 +31,7 @@ root_logger = logging.getLogger()
 root_logger.setLevel(logging.INFO)
 root_logger.addHandler(logging.StreamHandler())
 
-study_name = "stsb_no_cv_remote_01"
+study_name = "stsb_no_cv_remote_02"
 model_name = "xlm-r-distilroberta-base-paraphrase-v1"
 max_folds = 10
 
@@ -118,7 +118,7 @@ def fit_model(trial, train_fold, val_fold, fold_index):
         evaluator=None,
         epochs=num_epochs,
         warmup_steps=warmup_steps,
-        optimizer_params={"lr": lr, "eps": eps}, #  , "correct_bias": False},
+        optimizer_params={"lr": lr, "eps": eps},  # , "correct_bias": False},
         weight_decay=weight_decay,
     )
 
