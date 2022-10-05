@@ -1,0 +1,9 @@
+# study_name = "stsb_no_cv_remote_02"
+study_name: "stsb_no_cv_remote_02"
+
+# model_name = "xlm-r-distilroberta-base-paraphrase-v1"
+model_name: "xlm-r-distilroberta-base-paraphrase-v1"
+
+# storage="sqlite:///optuna.db",
+# storage=f"postgresql://optuna:{OPTUNA_PASS}@{OPTUNA_HOSTNAME}/optuna?sslmode=verify-full&sslrootcert=./root.crt",
+optuna_storage: "postgresql://optuna:{OPTUNA_PASS}@{OPTUNA_HOSTNAME}/optuna?sslmode=verify-full&sslrootcert=./root.crt"

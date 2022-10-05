@@ -1,4 +1,5 @@
 sentence-transformers
+torch
 pandas
 numpy
 scikit-learn
@@ -15,3 +16,6 @@ scipy
 datasets
 psycopg2-binary
 plotly
+pyyaml
+black
+isort
