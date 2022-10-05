@@ -27,7 +27,7 @@ _root_logger.addHandler(logging.StreamHandler())
 _logger = logging.getLogger(__name__)
 
 # read and set config from yaml
-with open("./train_config.yaml", "r") as train_config_file:
+with open("config.yaml", "r") as train_config_file:
     train_config = yaml.safe_load(train_config_file)
 # study_name = "stsb_no_cv_remote_02"
 study_name = train_config["study_name"]
