@@ -1,0 +1,8 @@
+[tool.black]
+line-length = 99
+target-version = ["py37"]
+
+[tool.isort]
+profile = "black"
+lines_after_imports = 2
+line_length = 99
