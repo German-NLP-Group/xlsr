@@ -35,6 +35,30 @@ best_trial.params: {'train_batch_size': 39, 'num_epochs': 8, 'lr': 1.80201586656
 'weight_decay': 0.002062478470459487, 'warmup_steps_mul': 0.6571864241925505}
 ```
 
+Results for model `paraphrase-multilingual-mpnet-base-v2`:
+
+```
+best_trial: FrozenTrial(number=73, 
+values=[0.88467176153687], 
+datetime_start=datetime.datetime(2022, 10, 4, 4, 29, 52, 297290), 
+datetime_complete=datetime.datetime(2022, 10, 4, 5, 36, 34, 592136), 
+params={'eps': 5.46546327020518e-05, 'lr': 1.05036252814912e-05, 'num_epochs': 1, 'train_batch_size': 10, 
+'warmup_steps_mul': 0.3635907846059213, 'weight_decay': 0.07964970481146776}, 
+distributions={'eps': FloatDistribution(high=0.0001, log=False, low=1e-07, step=None), 
+'lr': FloatDistribution(high=0.00025, log=False, low=2e-06, step=None), 
+'num_epochs': IntDistribution(high=8, log=False, low=1, step=1), 
+'train_batch_size': IntDistribution(high=80, log=False, low=4, step=1), 
+'warmup_steps_mul': FloatDistribution(high=0.7, log=False, low=0.1, step=None), 
+'weight_decay': FloatDistribution(high=0.1, log=False, low=0.0005, step=None)}, 
+user_attrs={'results': '[0.8849791104347544, 0.8842818196805877, 0.8857645655013733, 0.8850333656631684, 0.8849685731807815, 0.883991854102697, 0.8854227534484268, 0.883768652785338, 0.8836889495663515, 0.8848179710052217]'}, 
+system_attrs={}, 
+intermediate_values={0: 0.8849791104347544, 1: 0.8842818196805877, 2: 0.8857645655013733, 3: 0.8850333656631684, 4: 0.8849685731807815, 5: 0.883991854102697, 6: 0.8854227534484268, 7: 0.883768652785338, 8: 0.8836889495663515, 9: 0.8848179710052217}, 
+trial_id=91, state=TrialState.COMPLETE, value=None)
+##############
+best_trial.params: {'eps': 5.46546327020518e-05, 'lr': 1.05036252814912e-05, 'num_epochs': 1, 'train_batch_size': 10, 
+'warmup_steps_mul': 0.3635907846059213, 'weight_decay': 0.07964970481146776}
+```
+
 ## Models
 - [T-Systems-onsite/cross-en-de-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-de-roberta-sentence-transformer)
 - [T-Systems-onsite/cross-de-es-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-es-roberta-sentence-transformer)
