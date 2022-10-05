@@ -98,10 +98,10 @@ def fit_model(trial, train_fold, val_fold, fold_index):
 
     batch_size = trial.suggest_int("train_batch_size", 4, 80)
     num_epochs = trial.suggest_int("num_epochs", 1, 8)
-    lr = trial.suggest_uniform("lr", 2e-6, 2.5e-4)
-    eps = trial.suggest_uniform("eps", 1e-7, 1e-4)
-    weight_decay = trial.suggest_uniform("weight_decay", 0.0005, 0.1)
-    warmup_steps_mul = trial.suggest_uniform("warmup_steps_mul", 0.1, 0.7)
+    lr = trial.suggest_float("lr", 2e-6, 2.5e-4)
+    eps = trial.suggest_float("eps", 1e-7, 1e-4)
+    weight_decay = trial.suggest_float("weight_decay", 0.0005, 0.1)
+    warmup_steps_mul = trial.suggest_float("warmup_steps_mul", 0.1, 0.7)
 
     model = SentenceTransformer(model_name)
 
