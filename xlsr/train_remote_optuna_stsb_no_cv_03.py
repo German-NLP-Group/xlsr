@@ -35,9 +35,6 @@ study_name = "stsb_no_cv_remote_02"
 model_name = "paraphrase-multilingual-mpnet-base-v2"
 max_folds = 10
 
-OPTUNA_PASS = os.environ["OPTUNA_PASS"]
-OPTUNA_HOSTNAME = os.environ["OPTUNA_HOSTNAME"]
-
 def load_all_stsb_data(languages, split: str):
     data_per_language = []
     for language in languages:
