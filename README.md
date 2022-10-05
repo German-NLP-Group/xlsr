@@ -10,6 +10,31 @@ This is ongoing research. If you have ideas or want to drop a comment just
 - `train_optuna_stsb_do.py` - hyperparameter search for stsb data with dropout
 - `train_models_2_lang.py` - create and save model with two languages
 
+## HPO results
+
+Results for model `xlm-r-distilroberta-base-paraphrase-v1`:
+
+```
+best_trial: FrozenTrial(number=46,
+values=[0.8837476694198919],
+datetime_start=datetime.datetime(2022, 10, 3, 22, 12, 28, 292113), datetime_complete=datetime.datetime(2022, 10, 4, 1, 29, 27, 369305),
+params={'train_batch_size': 39, 'num_epochs': 8, 'lr': 1.8020158665633495e-05, 'eps': 8.911500324187447e-06,
+'weight_decay': 0.002062478470459487, 'warmup_steps_mul': 0.6571864241925505},
+distributions={'train_batch_size': IntDistribution(high=80, log=False, low=4, step=1),
+'num_epochs': IntDistribution(high=8, log=False, low=1, step=1),
+'lr': FloatDistribution(high=0.00025, log=False, low=2e-06, step=None),
+'eps': FloatDistribution(high=0.0001, log=False, low=1e-07, step=None),
+'weight_decay': FloatDistribution(high=0.1, log=False, low=0.0005, step=None),
+'warmup_steps_mul': FloatDistribution(high=0.7, log=False, low=0.1, step=None)},
+user_attrs={'results': '[0.8840569375039711, 0.8840753186972556, 0.8842396846015963, 0.8835176757217545, 0.883729569821923, 0.8830097995752192, 0.882905232860196, 0.88413090489947, 0.8843150617321305, 0.883496508785404]'}, 
+system_attrs={},
+intermediate_values={0: 0.8840569375039711, 1: 0.8840753186972556, 2: 0.8842396846015963, 3: 0.8835176757217545, 4: 0.883729569821923, 5: 0.8830097995752192, 6: 0.882905232860196, 7: 0.88413090489947, 8: 0.8843150617321305, 9: 0.883496508785404}, 
+trial_id=196, state=TrialState.COMPLETE, value=None)
+##############
+best_trial.params: {'train_batch_size': 39, 'num_epochs': 8, 'lr': 1.8020158665633495e-05, 'eps': 8.911500324187447e-06,
+'weight_decay': 0.002062478470459487, 'warmup_steps_mul': 0.6571864241925505}
+```
+
 ## Models
 - [T-Systems-onsite/cross-en-de-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-en-de-roberta-sentence-transformer)
 - [T-Systems-onsite/cross-de-es-roberta-sentence-transformer](https://huggingface.co/T-Systems-onsite/cross-de-es-roberta-sentence-transformer)
