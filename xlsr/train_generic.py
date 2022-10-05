@@ -29,7 +29,7 @@ _logger = logging.getLogger(__name__)
 # read and set config from yaml
 with open("train_config.yaml", "r") as train_config_file:
     train_config = yaml.safe_load(train_config_file)
-_logger.info("train_config:", train_config)
+_logger.info("train_config: %s", train_config)
 # study_name = "stsb_no_cv_remote_02"
 study_name = train_config["study_name"]
 # model_name = "xlm-r-distilroberta-base-paraphrase-v1"
@@ -92,9 +92,9 @@ def to_input_example(language_list):
 
 def fit_model(trial, train_fold, val_fold, fold_index):
     _logger.info("######################")
-    _logger.info("start of fold_index:", fold_index)
-    _logger.info("len(train_fold)", len(train_fold))
-    _logger.info("len(val_fold)", len(val_fold))
+    _logger.info("start of fold_index: %s", fold_index)
+    _logger.info("len(train_fold): %s", len(train_fold))
+    _logger.info("len(val_fold): %s", len(val_fold))
 
     batch_size = trial.suggest_int("train_batch_size", 4, 80)
     num_epochs = trial.suggest_int("num_epochs", 1, 8)
@@ -130,7 +130,7 @@ def fit_model(trial, train_fold, val_fold, fold_index):
     result = val_evaluator(model)
 
     _logger.info("######################################################")
-    _logger.info("test result:", result)
+    _logger.info("test result: %s", result)
     _logger.info("######################################################")
 
     if math.isnan(result):
@@ -200,7 +200,7 @@ def ex_wrapper(trial):
     try:
         return train(trial)
     except Exception as e:
-        _logger.warning("Exception in trual", exc_info=True)  # TODO: add more info from trial
+        _logger.warning("Exception in trial!", exc_info=True)  # TODO: add more info from trial
         trial.set_user_attr("exception", str(e))
         return float("nan")
 
